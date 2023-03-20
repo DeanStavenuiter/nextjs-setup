@@ -4,10 +4,6 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 import EmailValidator from "email-validator";
 
-type Data = {
-  name: string;
-};
-
 export const signupHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
@@ -15,9 +11,10 @@ export const signupHandler = async (
   const { email, password, repeatPassword } = req.body;
 
   if (req.method === "POST") {
-
-    if (!email && !password && !repeatPassword){
-      res.status(400).json({ message: "Provide a valid email and a valid password" });
+    if (!email && !password && !repeatPassword) {
+      res
+        .status(400)
+        .json({ message: "Provide a valid email and a valid password" });
       return;
     }
 
@@ -31,7 +28,7 @@ export const signupHandler = async (
       return;
     }
 
-    if (!repeatPassword){
+    if (!repeatPassword) {
       res.status(400).json({ message: "Repeat your password" });
       return;
     }
@@ -56,6 +53,8 @@ export const signupHandler = async (
     }
 
     try {
+      
+      await connectMongoDB();
       const matchUser = await User.findOne({ email });
 
       if (matchUser) {
@@ -67,7 +66,7 @@ export const signupHandler = async (
       const newUser = await User.create({ email, passwordHash });
       const response = { email: newUser.email, id: newUser._id };
 
-      res.status(201).json({message: "Sign up was successful", response});
+      res.status(201).json({ message: "Sign up was successful", response });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Oeps something went wrong" });
