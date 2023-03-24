@@ -8,14 +8,17 @@ export const signupHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { email, password, repeatPassword } = req.body;
-
+  
   if (req.method === "POST") {
+    const { email, password, repeatPassword } = req.body;
+
+    console.log(req.body)
+    console.log(email)
+    console.log(password)
+    console.log(repeatPassword)
+
     if (!email && !password && !repeatPassword) {
-      res
-        .status(400)
-        .json({ message: "Provide a valid email and a valid password" });
-      return;
+      return res.status(400).json({ message: "Provide a valid email and a valid password" });
     }
 
     if (!email) {
@@ -53,7 +56,6 @@ export const signupHandler = async (
     }
 
     try {
-      
       await connectMongoDB();
       const matchUser = await User.findOne({ email });
 

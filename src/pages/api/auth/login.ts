@@ -10,6 +10,7 @@ export const loginHandler = async (
 ) => {
   await connectMongoDB();
   const { email, password } = req.body;
+  console.log(req.body)
 
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide valid email and password" });
