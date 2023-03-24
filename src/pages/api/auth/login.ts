@@ -8,15 +8,15 @@ export const loginHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  await connectMongoDB();
   const { email, password } = req.body;
-  console.log(req.body)
 
   if (email === "" || password === "") {
     res.status(400).json({ message: "Provide valid email and password" });
     return;
   }
+
   try {
+    await connectMongoDB();
     const matchedUser = await User.findOne({ email });
 
     if (!matchedUser) {
@@ -41,7 +41,7 @@ export const loginHandler = async (
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error", error });
+    res.status(500).json({ message: error });
   }
 };
 
